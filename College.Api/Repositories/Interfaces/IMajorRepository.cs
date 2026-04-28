@@ -5,7 +5,7 @@ namespace College.Api.Repositories.Interfaces
 {
     public interface IMajorRepository
     {
-        Task<bool> MajorExists(int id);
+        Task<Major?> Exists(int id);
 
         Task<Major> CreateAsync(Major major);
 

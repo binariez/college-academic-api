@@ -7,6 +7,7 @@
         string Name,
         int SKS,
         int MinimumSemester,
-        int MajorId
+        int MajorId,
+        int PrerequisiteCourseId
     );
 }

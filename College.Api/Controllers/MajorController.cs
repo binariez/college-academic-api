@@ -36,19 +36,19 @@ namespace College.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMajor([FromBody] MajorRequestDto requestDto)
         {
-            var createdMajor = await majorService.CreateAsync(requestDto);
+            var result = await majorService.CreateAsync(requestDto);
 
-            return CreatedAtAction(nameof(GetMajorById), new { id = createdMajor.Id }, createdMajor);
+            return CreatedAtAction(nameof(GetMajorById), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMajor([FromRoute] int id, MajorRequestDto majorDTO)
         {
-            var updatedMajor = await majorService.UpdateAsync(id, majorDTO);
+            var result = await majorService.UpdateAsync(id, majorDTO);
 
-            if (updatedMajor == null) return NotFound();
+            if (result == null) return NotFound();
 
-            return Ok(updatedMajor);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]

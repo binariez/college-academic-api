@@ -50,16 +50,16 @@ namespace College.Api.Services
 
         public async Task<MajorResponseDto?> UpdateAsync(int id, MajorRequestDto requestDto)
         {
-            var major = new Major
+            var updatedObject = new Major
             {
                 Id = id,
                 Code = requestDto.Code,
                 Name = requestDto.Name,
             };
 
-            var updated = await majorRepo.UpdateAsync(major);
+            var result = await majorRepo.UpdateAsync(updatedObject);
 
-            return updated?.ToMajorDto();
+            return result?.ToMajorDto();
         }
 
         //-------------------------

@@ -24,7 +24,7 @@ namespace College.Api.Services
 
         public async Task<StudentResponseDto> CreateAsync(int majorId, StudentRequestDto requestDto)
         {
-            if (await majorRepo.MajorExists(majorId) == false)
+            if (await majorRepo.Exists(majorId) == null)
                 throw new Exception("The choosen Major does not exist!");
 
             var student = requestDto.ToStudentFromStudentDto(majorId);
@@ -55,7 +55,7 @@ namespace College.Api.Services
 
         public async Task<StudentResponseDto?> UpdateAsync(int id, StudentRequestDto requestDto)
         {
-            var student = new Student
+            var updatedObject = new Student
             {
                 Id = id,
                 FullName = requestDto.FullName,
@@ -69,7 +69,7 @@ namespace College.Api.Services
                 MajorId = requestDto.MajorId
             };
 
-            var result = await studentRepo.UpdateAsync(student);
+            var result = await studentRepo.UpdateAsync(updatedObject);
 
             return result?.ToStudentDto();
         }

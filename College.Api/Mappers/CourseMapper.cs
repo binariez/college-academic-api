@@ -5,7 +5,7 @@ namespace College.Api.Mappers
 {
     public static class CourseMapper
     {
-        public static CourseResponseDto ToCourseDto(this Course course)
+        public static CourseResponseDto ToResponseDto(this Course course)
         {
             return new CourseResponseDto
             (
@@ -14,11 +14,12 @@ namespace College.Api.Mappers
                 course.Name,
                 course.SKS,
                 course.MinimumSemester,
-                course.MajorId
+                course.MajorId,
+                course.PrerequisiteCourseId
             );
         }
 
-        public static Course ToCourseFromCourseDto(this CourseRequestDto requestDto, int majorId)
+        public static Course ToClassFromRequestDto(this CourseRequestDto requestDto, int majorId)
         {
             return new Course
             {
@@ -26,7 +27,8 @@ namespace College.Api.Mappers
                 Name = requestDto.Name,
                 SKS = requestDto.SKS,
                 MinimumSemester = requestDto.MinimumSemester,
-                MajorId = majorId
+                MajorId = majorId,
+                PrerequisiteCourseId = requestDto.PrerequisiteCourseId
             };
         }
     }

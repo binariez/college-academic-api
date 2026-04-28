@@ -51,19 +51,19 @@ namespace College.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCours([FromRoute]int id, [FromBody] CourseRequestDto requestDto)
         {
-            var updatedCourse = await courseService.UpdateAsync(id, requestDto);
+            var result = await courseService.UpdateAsync(id, requestDto);
 
-            if (updatedCourse == null) return NotFound();
+            if (result == null) return NotFound();
 
-            return CreatedAtAction(nameof(GetCourseById), new { id = updatedCourse.Id }, updatedCourse);
+            return CreatedAtAction(nameof(GetCourseById), new { id = result.Id }, result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse([FromRoute] int id)
         {
-            var deletedCourse = await courseService.DeleteAsync(id);
+            var result = await courseService.DeleteAsync(id);
 
-            if (deletedCourse == null) return NotFound();
+            if (result == null) return NotFound();
 
             return NoContent();
         }

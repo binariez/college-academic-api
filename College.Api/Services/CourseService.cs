@@ -25,14 +25,14 @@ namespace College.Api.Services
 
         public async Task<CourseResponseDto> CreateAsync(int majorId, CourseRequestDto requestDto)
         {
-            if (await majorRepo.MajorExists(majorId) == false)
+            if (await majorRepo.Exists(majorId) == null)
                 throw new Exception("The choosen major does not exist!");
 
-            var course = requestDto.ToCourseFromCourseDto(majorId);
+            var course = requestDto.ToClassFromRequestDto(majorId);
 
             var result = await courseRepo.CreateAsync(course);
 
-            return result.ToCourseDto();
+            return result.ToResponseDto();
         }
 
         public async Task<Course?> DeleteAsync(int id)
@@ -44,31 +44,32 @@ namespace College.Api.Services
         {
             var courses = await courseRepo.GetAllAsync();
 
-            return courses.Select(c => c.ToCourseDto());
+            return courses.Select(c => c.ToResponseDto());
         }
 
         public async Task<CourseResponseDto?> GetByIdAsync(int id)
         {
             var course = await courseRepo.GetByIdAsync(id);
 
-            return course?.ToCourseDto();
+            return course?.ToResponseDto();
         }
 
         public async Task<CourseResponseDto?> UpdateAsync(int id, CourseRequestDto requestDto)
         {
-            var course = new Course
+            var updatedObject = new Course
             {
                 Id = id,
                 Code = requestDto.Code,
                 Name = requestDto.Name,
                 SKS = requestDto.SKS,
                 MinimumSemester = requestDto.MinimumSemester,
-                MajorId = requestDto.MajorId
+                MajorId = requestDto.MajorId,
+                PrerequisiteCourseId = requestDto.PrerequisiteCourseId
             };
 
-            var result = await courseRepo.UpdateAsync(course);
+            var result = await courseRepo.UpdateAsync(updatedObject);
 
-            return result?.ToCourseDto();
+            return result?.ToResponseDto();
         }
 
         //-------------------------

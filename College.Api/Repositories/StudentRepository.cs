@@ -14,6 +14,11 @@ namespace College.Api.Repositories
             this.context = context;
         }
 
+        public async Task<Student?> Exists(int id)
+        {
+            return await context.Students.FindAsync(id);
+        }
+
         public async Task<Student> CreateAsync(Student studentModel)
         {
             await context.Students.AddAsync(studentModel);
