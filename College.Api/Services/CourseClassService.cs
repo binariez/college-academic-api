@@ -28,6 +28,8 @@ namespace College.Api.Services
             if (courseRepo.Exists(courseId) == null)
                 throw new Exception("The choosen course does not exist!");
 
+            
+
             var newObject = requestDto.ToClassFromRequestDto(courseId);
 
             await ccRepo.CreateAsync(newObject);

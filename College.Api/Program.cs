@@ -29,12 +29,14 @@ builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseClassRepository, CourseClassRepository>();
+builder.Services.AddScoped<ICourseEnrollmentRepository, CourseEnrollmentRepository>();
 
 // service
 builder.Services.AddScoped<IMajorService, MajorService>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ICourseClassService, CourseClassService>();
+builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
 
 var app = builder.Build();
 

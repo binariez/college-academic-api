@@ -1,8 +1,6 @@
 ﻿using College.Api.DTOs.CourseEnrollment;
 using College.Api.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 
 namespace College.Api.Controllers
 {
@@ -36,6 +34,8 @@ namespace College.Api.Controllers
         public async Task<IActionResult> GetEnrollmentById([FromRoute] int id)
         {
             var result = await enrollService.GetByIdAsync(id);
+
+            if (result == null) return NotFound();
 
             return Ok(result);
         }
