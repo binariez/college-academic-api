@@ -42,13 +42,13 @@ namespace College.Api.Services
                     throw new Exception("The choosen prerequisite course does not exist!");
             }
 
-            var course = requestDto.ToClassFromRequestDto(majorId);
+            var fromDto = requestDto.ToClassFromRequestDto(majorId);
 
-            course.PrerequisiteCourseId = prerequisiteId;
+            fromDto.PrerequisiteCourseId = prerequisiteId;
 
-            var result = await courseRepo.CreateAsync(course);
+            var newObject = await courseRepo.CreateAsync(fromDto);
 
-            return result.ToResponseDto();
+            return newObject.ToResponseDto();
         }
 
         public async Task<CourseResponseDto?> DeleteAsync(int id)
@@ -60,16 +60,16 @@ namespace College.Api.Services
 
         public async Task<IEnumerable<CourseResponseDto>> GetAllAsync()
         {
-            var courses = await courseRepo.GetAllAsync();
+            var result = await courseRepo.GetAllAsync();
 
-            return courses.Select(c => c.ToResponseDto());
+            return result.Select(c => c.ToResponseDto());
         }
 
         public async Task<CourseResponseDto?> GetByIdAsync(int id)
         {
-            var course = await courseRepo.GetByIdAsync(id);
+            var result = await courseRepo.GetByIdAsync(id);
 
-            return course?.ToResponseDto();
+            return result?.ToResponseDto();
         }
 
         public async Task<CourseResponseDto?> UpdateAsync(int id, CourseRequestDto requestDto)

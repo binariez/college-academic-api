@@ -1,5 +1,4 @@
-﻿using College.Api.DTOs.Course;
-using College.Api.Models;
+﻿using College.Api.Models;
 
 namespace College.Api.Repositories.Interfaces
 {

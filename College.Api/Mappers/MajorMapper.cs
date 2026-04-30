@@ -1,5 +1,4 @@
 ﻿using College.Api.DTOs.Major;
-using College.Api.DTOs.Student;
 using College.Api.Models;
 
 namespace College.Api.Mappers

@@ -14,6 +14,10 @@ namespace College.Api.Services
             this.enrollmentRepo = enrollmentRepo;
         }
 
+        //-------------------------
+        // Begin of CRUD operations
+        //-------------------------
+
         public async Task<CourseEnrollmentResponseDto> CreateAsync(CourseEnrollmentRequestDto requestDto)
         {
             var exists = await enrollmentRepo.AlreadyEnrolled(requestDto.StudentId, requestDto.CourseClassId);
@@ -26,20 +30,20 @@ namespace College.Api.Services
 
             var fromDto = requestDto.ToClassFromRequestDto();
 
-            var enrollment = await enrollmentRepo.CreateAsync(fromDto);
+            var newObject = await enrollmentRepo.CreateAsync(fromDto);
 
-            return enrollment.ToResponseDto();
+            return newObject.ToResponseDto();
         }
 
         public async Task<CourseEnrollmentResponseDto?> DeleteAsync(int courseEnrollmentId)
         {
-            var enrollment = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
+            var deletedObject = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
 
-            if (enrollment == null) return null;
+            if (deletedObject == null) return null;
 
-            await enrollmentRepo.DeleteAsync(enrollment);
+            await enrollmentRepo.DeleteAsync(deletedObject);
 
-            return enrollment.ToResponseDto();
+            return deletedObject.ToResponseDto();
         }
 
         public async Task<CourseEnrollmentResponseDto?> GetByIdAsync(int id)
@@ -55,5 +59,9 @@ namespace College.Api.Services
 
             return result.Select(r => r.ToResponseDto());
         }
+
+        //-------------------------
+        // End of CRUD operations
+        //-------------------------
     }
 }

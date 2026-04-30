@@ -1,5 +1,4 @@
-﻿using College.Api.DTOs.CourseEnrollment;
-using College.Api.Models;
+﻿using College.Api.Models;
 using College.Api.Persistence;
 using College.Api.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;

@@ -2,7 +2,6 @@
 using College.Api.Persistence;
 using College.Api.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 
 namespace College.Api.Repositories
 {

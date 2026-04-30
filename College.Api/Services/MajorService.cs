@@ -22,30 +22,32 @@ namespace College.Api.Services
 
         public async Task<MajorResponseDto> CreateAsync(MajorRequestDto requestDto)
         {
-            var major = requestDto.ToMajorFromMajorDto();
+            var fromDto = requestDto.ToMajorFromMajorDto();
 
-            await majorRepo.CreateAsync(major);
+            var newObject = await majorRepo.CreateAsync(fromDto);
 
-            return major.ToMajorDto();
+            return newObject.ToMajorDto();
         }
 
-        public async Task<Major?> DeleteAsync(int id)
+        public async Task<MajorResponseDto?> DeleteAsync(int id)
         {
-            return await majorRepo.DeleteAsync(id);
+            var deletedObject = await majorRepo.DeleteAsync(id);
+
+            return deletedObject?.ToMajorDto();
         }
 
         public async Task<IEnumerable<MajorResponseDto>> GetAllAsync()
         {
-            var majors = await majorRepo.GetAllAsync();
+            var result = await majorRepo.GetAllAsync();
 
-            return majors.Select(m => m.ToMajorDto());
+            return result.Select(m => m.ToMajorDto());
         }
 
         public async Task<MajorResponseWithStudentDto?> GetByIdAsync(int id)
         {
-            var major = await majorRepo.GetByIdAsync(id);
+            var result = await majorRepo.GetByIdAsync(id);
 
-            return major?.ToMajorDetailDto();
+            return result?.ToMajorDetailDto();
         }
 
         public async Task<MajorResponseDto?> UpdateAsync(int id, MajorRequestDto requestDto)

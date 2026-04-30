@@ -8,8 +8,8 @@ namespace College.Api.Services
 {
     public class StudentService : IStudentService
     {
-        private IMajorRepository majorRepo;
-        private IStudentRepository studentRepo;
+        private readonly IMajorRepository majorRepo;
+        private readonly IStudentRepository studentRepo;
 
         public StudentService(IMajorRepository majorRepo, IStudentRepository studentRepo)
         {
@@ -27,11 +27,11 @@ namespace College.Api.Services
             if (await majorRepo.Exists(majorId) == null)
                 throw new Exception("The choosen Major does not exist!");
 
-            var student = requestDto.ToStudentFromStudentDto(majorId);
+            var fromDto = requestDto.ToStudentFromStudentDto(majorId);
 
-            var result = await studentRepo.CreateAsync(student);
+            var newObject = await studentRepo.CreateAsync(fromDto);
 
-            return result.ToStudentDto();
+            return newObject.ToStudentDto();
         }
 
         public async Task<StudentResponseDto?> DeleteAsync(int id)
@@ -43,16 +43,16 @@ namespace College.Api.Services
 
         public async Task<IEnumerable<StudentResponseDto>> GetAllAsync()
         {
-            var students = await studentRepo.GetAllAsync();
+            var result = await studentRepo.GetAllAsync();
 
-            return students.Select(s => s.ToStudentDto());
+            return result.Select(s => s.ToStudentDto());
         }
 
         public async Task<StudentResponseDto?> GetByIdAsync(int id)
         {
-            var student= await studentRepo.GetByIdAsync(id);
+            var result = await studentRepo.GetByIdAsync(id);
 
-            return student?.ToStudentDto();
+            return result?.ToStudentDto();
         }
 
         public async Task<StudentResponseDto?> UpdateAsync(int id, StudentRequestDto requestDto)
