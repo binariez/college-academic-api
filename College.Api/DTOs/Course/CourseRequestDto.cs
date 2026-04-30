@@ -7,6 +7,6 @@
         int SKS,
         int MinimumSemester,
         int MajorId,
-        int PrerequisiteCourseId
+        int? PrerequisiteCourseId
     );
 }

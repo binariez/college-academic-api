@@ -9,7 +9,7 @@ public class Course
     public int MinimumSemester { get; set; }
 
     // Self reference if a course needs another course to be finished first
-    public int PrerequisiteCourseId { get; set; }
+    public int? PrerequisiteCourseId { get; set; }
     public Course? PrerequisiteCourse { get; set; }
 
     // Form a relation to `Major` entity
