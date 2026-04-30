@@ -23,9 +23,13 @@ public class Student //: BaseEntity
     // Form a relation to `Major` entity
     // 1 to many relation: 1 Major can have many Students
     // Storing MajorId as foreign key.
-    // Also keep major class 
+    // Also keep major class as a navigation
     public int MajorId { get; set; }
     public Major Major { get; set; } = null!;
+
+    // Form a relation with `CourseEnrollment` entity
+    // 1 to many relation: 1 Student can have many CourseEnrollments
+    public ICollection<CourseEnrollment> CourseEnrollments { get; set; } = [];
 
 
 

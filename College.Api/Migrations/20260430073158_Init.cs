@@ -108,10 +108,48 @@ namespace College.Api.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "CourseEnrollments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    CourseClassId = table.Column<int>(type: "int", nullable: false),
+                    EnrolledAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EnrollmentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseEnrollments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CourseEnrollments_CourseClasses_CourseClassId",
+                        column: x => x.CourseClassId,
+                        principalTable: "CourseClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CourseEnrollments_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CourseClasses_CourseId",
                 table: "CourseClasses",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseEnrollments_CourseClassId",
+                table: "CourseEnrollments",
+                column: "CourseClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseEnrollments_StudentId",
+                table: "CourseEnrollments",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Courses_MajorId",
@@ -132,6 +170,9 @@ namespace College.Api.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "CourseEnrollments");
+
             migrationBuilder.DropTable(
                 name: "CourseClasses");
 

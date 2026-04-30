@@ -1,6 +1,4 @@
 ﻿using College.Api.DTOs.Student;
-using College.Api.Models;
-using College.Api.Repositories;
 
 namespace College.Api.Services.Interfaces
 {
@@ -8,7 +6,7 @@ namespace College.Api.Services.Interfaces
     {
         Task<StudentResponseDto> CreateAsync(int majorId, StudentRequestDto requestDto);
 
-        Task<Student?> DeleteAsync(int id);
+        Task<StudentResponseDto?> DeleteAsync(int id);
 
         Task<IEnumerable<StudentResponseDto>> GetAllAsync();
 

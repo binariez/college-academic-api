@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<CourseClass> CourseClasses => Set<CourseClass>();
+    public DbSet<CourseEnrollment> CourseEnrollments => Set<CourseEnrollment>();
     public DbSet<Major> Majors => Set<Major>();
     public DbSet<Student> Students => Set<Student>();
 
@@ -40,6 +41,20 @@ public class AppDbContext : DbContext
             .HasOne(c => c.PrerequisiteCourse)
             .WithMany()
             .HasForeignKey(c => c.PrerequisiteCourseId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure 1(CourseClass) to many(CourseEnrollment) relationship
+        modelBuilder.Entity<CourseEnrollment>()
+            .HasOne(ce => ce.CourseClass)
+            .WithMany(cc => cc.CourseEnrollments)
+            .HasForeignKey(ce => ce.CourseClassId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Configure 1(Student) to many(CourseEnrollment) relationship
+        modelBuilder.Entity<CourseEnrollment>()
+            .HasOne(ce => ce.Student)
+            .WithMany(s => s.CourseEnrollments)
+            .HasForeignKey(ce => ce.StudentId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 

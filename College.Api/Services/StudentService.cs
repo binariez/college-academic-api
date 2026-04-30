@@ -34,9 +34,11 @@ namespace College.Api.Services
             return result.ToStudentDto();
         }
 
-        public async Task<Student?> DeleteAsync(int id)
+        public async Task<StudentResponseDto?> DeleteAsync(int id)
         {
-            return await studentRepo.DeleteAsync(id);
+            var deletedObject = await studentRepo.DeleteAsync(id);
+
+            return deletedObject?.ToStudentDto();
         }
 
         public async Task<IEnumerable<StudentResponseDto>> GetAllAsync()

@@ -16,5 +16,9 @@ namespace College.Api.Models
         public int AcademicYear { get; set; }
 
         public SemesterType SemesterType { get; set; }
+
+        // Form a relation with `CourseEnrollment` entity
+        // 1 to many relation: 1 CourseClass can have many CourseEnrollments
+        public ICollection<CourseEnrollment> CourseEnrollments { get; set; } = [];
     }
 }

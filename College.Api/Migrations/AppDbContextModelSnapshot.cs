@@ -88,6 +88,36 @@ namespace College.Api.Migrations
                     b.ToTable("CourseClasses");
                 });
 
+            modelBuilder.Entity("College.Api.Models.CourseEnrollment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseClassId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EnrolledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnrollmentStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseClassId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("CourseEnrollments");
+                });
+
             modelBuilder.Entity("College.Api.Models.Major", b =>
                 {
                     b.Property<int>("Id")
@@ -200,6 +230,25 @@ namespace College.Api.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("College.Api.Models.CourseEnrollment", b =>
+                {
+                    b.HasOne("College.Api.Models.CourseClass", "CourseClass")
+                        .WithMany("CourseEnrollments")
+                        .HasForeignKey("CourseClassId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("College.Api.Models.Student", "Student")
+                        .WithMany("CourseEnrollments")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CourseClass");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("College.Api.Models.Student", b =>
                 {
                     b.HasOne("College.Api.Models.Major", "Major")
@@ -216,11 +265,21 @@ namespace College.Api.Migrations
                     b.Navigation("CourseClasses");
                 });
 
+            modelBuilder.Entity("College.Api.Models.CourseClass", b =>
+                {
+                    b.Navigation("CourseEnrollments");
+                });
+
             modelBuilder.Entity("College.Api.Models.Major", b =>
                 {
                     b.Navigation("Courses");
 
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("College.Api.Models.Student", b =>
+                {
+                    b.Navigation("CourseEnrollments");
                 });
 #pragma warning restore 612, 618
         }
