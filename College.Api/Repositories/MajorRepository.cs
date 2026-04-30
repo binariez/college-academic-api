@@ -48,7 +48,7 @@ namespace College.Api.Repositories
 
         public async Task<Major?> GetByIdAsync(int id)
         {
-            var res = await Exists(id);
+            var res = await context.Majors.Include(m => m.Students).FirstOrDefaultAsync(m => m.Id == id);
             return res;
         }
 
