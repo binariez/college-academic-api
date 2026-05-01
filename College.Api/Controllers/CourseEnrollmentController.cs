@@ -40,12 +40,30 @@ namespace College.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("enrollment/{studentId}")]
+        [HttpGet("student/{studentId}")]
         public async Task<IActionResult> GetEnrollmentByStudentId([FromRoute] int studentId)
         {
             var result = await enrollService.GetByStudentIdAsync(studentId);
 
+            if (result == null) return NotFound();
+
             return Ok(result);
+        }
+
+        [HttpDelete("{enrollmentId}")]
+        public async Task<IActionResult> DeleteEnrollment([FromRoute] int enrollmentId)
+        {
+            var result = await enrollService.DeleteAsync(id);
+
+            if (result == null) return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpDelete("student/{enrollmentId}")]
+        public IActionResult DropEnrollment([FromRoute] int enrollmentId)
+        {
+
         }
     }
 }

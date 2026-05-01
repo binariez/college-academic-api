@@ -8,6 +8,12 @@ namespace College.Api.Services.Interfaces
 
         Task<CourseEnrollmentResponseDto?> DeleteAsync(int courseEnrollmentId);
 
+        Task<CourseEnrollmentResponseDto?> DropEnrollmentAsync(int courseEnrollmentId);
+
+        Task<CourseEnrollmentResponseDto?> CompleteEnrollmentAsync(int courseEnrollmentId);
+
+        Task<CourseEnrollmentResponseDto?> ReEnrollAsync(int courseEnrollmentId);
+
         Task<CourseEnrollmentResponseDto?> GetByIdAsync(int id);
 
         Task<IEnumerable<CourseEnrollmentResponseDto>> GetByStudentIdAsync(int studentId);

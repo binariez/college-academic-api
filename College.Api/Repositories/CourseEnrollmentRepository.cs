@@ -14,6 +14,11 @@ namespace College.Api.Repositories
             this.context = context;
         }
 
+        public async Task<CourseEnrollment?> Exists(int id)
+        {
+            return await context.CourseEnrollments.FindAsync(id);
+        }
+
         public async Task<CourseEnrollment?> AlreadyEnrolled(int studentId, int courseClassId)
         {
             return await context.CourseEnrollments
@@ -33,15 +38,28 @@ namespace College.Api.Repositories
 
         public async Task<CourseEnrollment?> DeleteAsync(CourseEnrollment enrollment)
         {
-            var fromDb = await context.CourseEnrollments.FindAsync(enrollment.Id);
+            var fromDb = await Exists(enrollment.Id);
 
             if (fromDb == null) return null;
 
             context.CourseEnrollments.Remove(enrollment);
 
             await context.SaveChangesAsync();
-
+(
             return fromDb;
+        }
+
+        public async Task<CourseEnrollment?> UpdateAsync(CourseEnrollment enrollment)
+        {
+            var fromDb = await Exists(enrollment.Id);
+
+            if (fromDb == null) return null;
+
+            context.Entry(fromDb).CurrentValues.SetValues(enrollment);
+
+            await context.SaveChangesAsync();
+
+            return enrollment;
         }
 
         public async Task<CourseEnrollment?> GetByIdAsync(int id)

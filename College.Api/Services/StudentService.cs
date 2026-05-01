@@ -27,32 +27,32 @@ namespace College.Api.Services
             if (await majorRepo.Exists(majorId) == null)
                 throw new Exception("The choosen Major does not exist!");
 
-            var fromDto = requestDto.ToStudentFromStudentDto(majorId);
+            var fromDto = requestDto.ToClassFromRequestDto(majorId);
 
             var newObject = await studentRepo.CreateAsync(fromDto);
 
-            return newObject.ToStudentDto();
+            return newObject.ToResponseDto();
         }
 
         public async Task<StudentResponseDto?> DeleteAsync(int id)
         {
             var deletedObject = await studentRepo.DeleteAsync(id);
 
-            return deletedObject?.ToStudentDto();
+            return deletedObject?.ToResponseDto();
         }
 
         public async Task<IEnumerable<StudentResponseDto>> GetAllAsync()
         {
             var result = await studentRepo.GetAllAsync();
 
-            return result.Select(s => s.ToStudentDto());
+            return result.Select(s => s.ToResponseDto());
         }
 
         public async Task<StudentResponseDto?> GetByIdAsync(int id)
         {
             var result = await studentRepo.GetByIdAsync(id);
 
-            return result?.ToStudentDto();
+            return result?.ToResponseDto();
         }
 
         public async Task<StudentResponseDto?> UpdateAsync(int id, StudentRequestDto requestDto)
@@ -73,7 +73,7 @@ namespace College.Api.Services
 
             var result = await studentRepo.UpdateAsync(updatedObject);
 
-            return result?.ToStudentDto();
+            return result?.ToResponseDto();
         }
 
         //-------------------------

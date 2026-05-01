@@ -8,7 +8,7 @@ namespace College.Api.Mappers
         /// <summary>
         /// Using this to map Student data response for client based on response DTO structure
         /// </summary>
-        public static StudentResponseDto ToStudentDto(this Student student)
+        public static StudentResponseDto ToResponseDto(this Student student)
         {
             return new StudentResponseDto
             (
@@ -41,7 +41,7 @@ namespace College.Api.Mappers
             );
         }
 
-        public static Student ToStudentFromStudentDto(this StudentRequestDto requestDto, int majorId)
+        public static Student ToClassFromRequestDto(this StudentRequestDto requestDto, int majorId)
         {
             return new Student
             {
