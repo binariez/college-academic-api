@@ -45,7 +45,7 @@ namespace College.Api.Repositories
             context.CourseEnrollments.Remove(enrollment);
 
             await context.SaveChangesAsync();
-(
+
             return fromDb;
         }
 

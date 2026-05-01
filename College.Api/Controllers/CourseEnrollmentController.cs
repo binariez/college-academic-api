@@ -50,20 +50,48 @@ namespace College.Api.Controllers
             return Ok(result);
         }
 
+        // Hard delete by admin
         [HttpDelete("{enrollmentId}")]
         public async Task<IActionResult> DeleteEnrollment([FromRoute] int enrollmentId)
         {
-            var result = await enrollService.DeleteAsync(id);
+            var result = await enrollService.DeleteAsync(enrollmentId);
 
             if (result == null) return NotFound();
 
             return NoContent();
         }
 
-        [HttpDelete("student/{enrollmentId}")]
-        public IActionResult DropEnrollment([FromRoute] int enrollmentId)
+        // Soft delete by student
+        [HttpPut("student/drop/{enrollmentId}")]
+        public async Task<IActionResult> DropEnrollment([FromRoute] int enrollmentId)
         {
+            var result = await enrollService.DropEnrollmentAsync(enrollmentId);
 
+            if (result == null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // Ideally, this should be automatic. But for now I'm just putting it here
+        [HttpPut("{enrollmentId}")]
+        public async Task<IActionResult> CompleteEnrollment([FromRoute] int enrollmentId)
+        {
+            var result = await enrollService.CompleteEnrollmentAsync(enrollmentId);
+
+            if (result == null) return NotFound();
+
+            return Ok(result);
+        }
+
+        // For more information, ctrl + click the service method
+        [HttpPut("student/re-enroll/{enrollmentId}")]
+        public async Task<IActionResult> ReEnroll([FromRoute] int enrollmentId)
+        {
+            var result = await enrollService.ReEnrollAsync(enrollmentId);
+
+            if (result == null) return NotFound();
+
+            return Ok(result);
         }
     }
 }

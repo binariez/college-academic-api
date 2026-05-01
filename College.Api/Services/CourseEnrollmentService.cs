@@ -68,7 +68,7 @@ namespace College.Api.Services
         {
             var existing = await enrollmentRepo.Exists(courseEnrollmentId);
 
-            if (existing == null) throw new Exception("Enrollment does not exist!");
+            if (existing == null) return null;
 
             if (existing.EnrollmentStatus == EnrollmentStatus.Completed)
                 throw new Exception("Cannot drop because this enrollment has already been completed!");
@@ -85,7 +85,7 @@ namespace College.Api.Services
         {
             var existing = await enrollmentRepo.Exists(courseEnrollmentId);
 
-            if (existing == null) throw new Exception("Enrollment does not exist!");
+            if (existing == null) return null;
 
             if (existing.EnrollmentStatus == EnrollmentStatus.Dropped)
                 throw new Exception("Cannot complete an enrollment that has been dropped. Please the status to enrolled first!");
@@ -103,7 +103,7 @@ namespace College.Api.Services
         {
             var existing = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
 
-            if (existing == null) throw new Exception("Enrollment does not exist!");
+            if (existing == null) return null;
 
             if (existing.EnrollmentStatus == EnrollmentStatus.Completed)
                 throw new Exception("Cannot re-enroll. Enrollment has already been completed!");
