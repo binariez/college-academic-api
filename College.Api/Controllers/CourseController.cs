@@ -6,7 +6,7 @@ namespace College.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CourseController : ControllerBase
+    public class CourseController : BaseController
     {
         private readonly ICourseService courseService;
 
@@ -36,6 +36,12 @@ namespace College.Api.Controllers
         [HttpPost("{majorId}")]
         public async Task<IActionResult> CreateCourse([FromRoute] int majorId, [FromBody] CourseRequestDto requestDto)
         {
+            // DTO validation
+            var errors = GetValidationErrors(requestDto);
+
+            if (errors.Count != 0) return BadRequest(new { Errors = errors });
+
+            // Proceed to service
             try
             {
                 var result = await courseService.CreateAsync(majorId, requestDto);
@@ -51,6 +57,12 @@ namespace College.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCours([FromRoute]int id, [FromBody] CourseRequestDto requestDto)
         {
+            // DTO validation
+            var errors = GetValidationErrors(requestDto);
+
+            if (errors.Count != 0) return BadRequest(new { Errors = errors });
+
+            // Proceed to service
             var result = await courseService.UpdateAsync(id, requestDto);
 
             if (result == null) return NotFound();

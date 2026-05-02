@@ -6,7 +6,7 @@ namespace College.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CourseEnrollmentController : ControllerBase
+    public class CourseEnrollmentController : BaseController
     {
         private readonly ICourseEnrollmentService enrollService;
 
@@ -18,6 +18,12 @@ namespace College.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCourseEnrollment([FromBody] CourseEnrollmentRequestDto requestDto)
         {
+            // DTO validation
+            var errors = GetValidationErrors(requestDto);
+
+            if (errors.Count != 0) return BadRequest(new { Errors = errors });
+
+            // Proceed to service
             try
             {
                 var result = await enrollService.CreateAsync(requestDto);
@@ -92,7 +98,7 @@ namespace College.Api.Controllers
         }
 
         // For more information, ctrl + click the service method
-        [HttpPut("student/re-enroll/{enrollmentId}")]
+        [HttpPut("student/reenroll/{enrollmentId}")]
         public async Task<IActionResult> ReEnroll([FromRoute] int enrollmentId)
         {
             var result = await enrollService.ReEnrollAsync(enrollmentId);

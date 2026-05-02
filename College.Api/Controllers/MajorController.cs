@@ -6,7 +6,7 @@ namespace College.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MajorController : ControllerBase
+    public class MajorController : BaseController
     {
         private readonly IMajorService majorService;
 
@@ -36,6 +36,12 @@ namespace College.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMajor([FromBody] MajorRequestDto requestDto)
         {
+            // DTO validation
+            var errors = GetValidationErrors(requestDto);
+
+            if (errors.Count != 0) return BadRequest(new { Errors = errors });
+
+            // Proceed to service
             var result = await majorService.CreateAsync(requestDto);
 
             return CreatedAtAction(nameof(GetMajorById), new { id = result.Id }, result);
