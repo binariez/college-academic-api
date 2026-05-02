@@ -4,7 +4,7 @@ namespace College.Api.Repositories.Interfaces
 {
     public interface ICourseEnrollmentRepository
     {
-        Task<CourseEnrollment?> Exists(int id);
+        Task<bool> Exists(int id);
 
         Task<CourseEnrollment?> AlreadyEnrolled(int studentId, int courseClassId);
 

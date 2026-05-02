@@ -25,7 +25,7 @@ namespace College.Api.Services
 
         public async Task<CourseClassResponseDto> CreateAsync(int courseId, CourseClassRequestDto requestDto)
         {
-            if (courseRepo.Exists(courseId) == null)
+            if (await courseRepo.Exists(courseId) == false)
                 throw new Exception("The choosen course does not exist!");
 
             var fromDto = requestDto.ToClassFromRequestDto(courseId);

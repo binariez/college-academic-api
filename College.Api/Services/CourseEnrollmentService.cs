@@ -33,9 +33,11 @@ namespace College.Api.Services
 
         public async Task<CourseEnrollmentResponseDto> CreateAsync(CourseEnrollmentRequestDto requestDto)
         {
-            _ = await studentRepo.Exists(requestDto.StudentId) ?? throw new Exception("Student does not exist!");
+            if (await studentRepo.Exists(requestDto.StudentId) == false)
+                throw new Exception("Student does not exist!");
 
-            _ = await courseClassRepo.Exists(requestDto.CourseClassId) ?? throw new Exception("Course class does not exist!");
+            if (await courseClassRepo.Exists(requestDto.CourseClassId) == false) 
+                throw new Exception("Course class does not exist!");
 
             var alreadyEnrolled = await enrollmentRepo.AlreadyEnrolled(requestDto.StudentId, requestDto.CourseClassId);
 
@@ -53,7 +55,7 @@ namespace College.Api.Services
         // Hard delete (intended for admin usage)
         public async Task<CourseEnrollmentResponseDto?> DeleteAsync(int courseEnrollmentId)
         {
-            var deletedObject = await enrollmentRepo.Exists(courseEnrollmentId);
+            var deletedObject = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
 
             if (deletedObject == null) return null;
 
@@ -65,7 +67,7 @@ namespace College.Api.Services
         // Soft delete (intended for student usage)
         public async Task<CourseEnrollmentResponseDto?> DropEnrollmentAsync(int courseEnrollmentId)
         {
-            var existing = await enrollmentRepo.Exists(courseEnrollmentId);
+            var existing = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
 
             if (existing == null) return null;
 
@@ -82,7 +84,7 @@ namespace College.Api.Services
         // Ideally, this should be triggered automatically by the system when a student has completed the enrollment
         public async Task<CourseEnrollmentResponseDto?> CompleteEnrollmentAsync(int courseEnrollmentId)
         {
-            var existing = await enrollmentRepo.Exists(courseEnrollmentId);
+            var existing = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
 
             if (existing == null) return null;
 

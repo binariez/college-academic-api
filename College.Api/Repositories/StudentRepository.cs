@@ -14,9 +14,9 @@ namespace College.Api.Repositories
             this.context = context;
         }
 
-        public async Task<Student?> Exists(int id)
+        public async Task<bool> Exists(int id)
         {
-            return await context.Students.FindAsync(id);
+            return await context.Students.AnyAsync(s => s.Id == id);
         }
 
         public async Task<Student> CreateAsync(Student studentModel)

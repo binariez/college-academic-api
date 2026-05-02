@@ -24,7 +24,7 @@ namespace College.Api.Services
 
         public async Task<StudentResponseDto> CreateAsync(int majorId, StudentRequestDto requestDto)
         {
-            if (await majorRepo.Exists(majorId) == null)
+            if (await majorRepo.Exists(majorId) == false)
                 throw new Exception("The choosen Major does not exist!");
 
             var fromDto = requestDto.ToClassFromRequestDto(majorId);

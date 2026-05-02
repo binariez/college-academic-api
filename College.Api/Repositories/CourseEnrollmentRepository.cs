@@ -14,9 +14,9 @@ namespace College.Api.Repositories
             this.context = context;
         }
 
-        public async Task<CourseEnrollment?> Exists(int id)
+        public async Task<bool> Exists(int id)
         {
-            return await context.CourseEnrollments.FindAsync(id);
+            return await context.CourseEnrollments.AnyAsync(ce => ce.Id == id);
         }
 
         public async Task<CourseEnrollment?> AlreadyEnrolled(int studentId, int courseClassId)
@@ -38,7 +38,7 @@ namespace College.Api.Repositories
 
         public async Task<CourseEnrollment?> DeleteAsync(CourseEnrollment enrollment)
         {
-            var fromDb = await Exists(enrollment.Id);
+            var fromDb = await context.CourseEnrollments.FindAsync(enrollment.Id);
 
             if (fromDb == null) return null;
 
@@ -51,7 +51,7 @@ namespace College.Api.Repositories
 
         public async Task<CourseEnrollment?> UpdateAsync(CourseEnrollment enrollment)
         {
-            var fromDb = await Exists(enrollment.Id);
+            var fromDb = await context.CourseEnrollments.FindAsync(enrollment.Id);
 
             if (fromDb == null) return null;
 

@@ -14,9 +14,9 @@ namespace College.Api.Repositories
             this.context = context;
         }
 
-        public async Task<CourseClass?> Exists(int id)
+        public async Task<bool> Exists(int id)
         {
-            return await context.CourseClasses.FindAsync(id);
+            return await context.CourseClasses.AnyAsync(c => c.Id == id);
         }
 
         public async Task<CourseClass> CreateAsync(CourseClass courseClass)
@@ -30,7 +30,7 @@ namespace College.Api.Repositories
 
         public async Task<CourseClass?> DeleteAsync(int id)
         {
-            var courseClassObject = await Exists(id);
+            var courseClassObject = await context.CourseClasses.FindAsync(id);
 
             if (courseClassObject == null) return null;
 
@@ -48,7 +48,7 @@ namespace College.Api.Repositories
 
         public async Task<CourseClass?> GetByIdAsync(int id)
         {
-            var courseClassObject = await Exists(id);
+            var courseClassObject = await context.CourseClasses.FindAsync(id);
 
             if (courseClassObject == null) return null;
 
@@ -57,7 +57,7 @@ namespace College.Api.Repositories
 
         public async Task<CourseClass?> UpdateAsync(CourseClass courseClass)
         {
-            var courseClassFromDb = await Exists(courseClass.Id);
+            var courseClassFromDb = await context.CourseClasses.FindAsync(courseClass.Id);
 
             if (courseClassFromDb == null) return null;
 

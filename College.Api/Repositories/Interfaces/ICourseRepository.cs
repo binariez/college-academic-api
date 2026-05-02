@@ -4,7 +4,7 @@ namespace College.Api.Repositories.Interfaces
 {
     public interface ICourseRepository
     {
-        Task<Course?> Exists(int id);
+        Task<bool> Exists(int id);
 
         Task<Course> CreateAsync(Course course);
 

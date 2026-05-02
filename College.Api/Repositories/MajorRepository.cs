@@ -14,9 +14,9 @@ namespace College.Api.Repositories
             this.context = context;
         }
 
-        public async Task<Major?> Exists(int id)
+        public async Task<bool> Exists(int id)
         {
-            return await context.Majors.FindAsync(id);
+            return await context.Majors.AnyAsync(m => m.Id == id);
         }
 
         public async Task<Major> CreateAsync(Major major)
@@ -30,7 +30,7 @@ namespace College.Api.Repositories
 
         public async Task<Major?> DeleteAsync(int id)
         {
-            var majorObject = await Exists(id);
+            var majorObject = await context.Majors.FindAsync(id);
 
             if (majorObject == null) return null;
 
@@ -54,7 +54,7 @@ namespace College.Api.Repositories
 
         public async Task<Major?> UpdateAsync(Major major)
         {
-            var majorFromDb = await Exists(major.Id);
+            var majorFromDb = await context.Majors.FindAsync(major.Id);
 
             if (majorFromDb == null) return null;
 

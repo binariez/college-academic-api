@@ -26,7 +26,7 @@ namespace College.Api.Services
         public async Task<CourseResponseDto> CreateAsync(int majorId, CourseRequestDto requestDto)
         {
             // Validate major existence
-            if (await majorRepo.Exists(majorId) == null)
+            if (await majorRepo.Exists(majorId) == false)
                 throw new Exception("The choosen major does not exist!");
 
             int? prerequisiteId = requestDto.PrerequisiteCourseId;
@@ -38,7 +38,7 @@ namespace College.Api.Services
             {
                 var exists = await courseRepo.Exists(prerequisiteId.Value);
 
-                if (exists == null)
+                if (exists == false)
                     throw new Exception("The choosen prerequisite course does not exist!");
             }
 
