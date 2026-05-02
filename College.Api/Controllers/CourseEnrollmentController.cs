@@ -30,6 +30,14 @@ namespace College.Api.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetEnrollmentAll()
+        {
+            var result = await enrollService.GetAllAsync();
+
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEnrollmentById([FromRoute] int id)
         {
@@ -73,7 +81,7 @@ namespace College.Api.Controllers
         }
 
         // Ideally, this should be automatic. But for now I'm just putting it here
-        [HttpPut("{enrollmentId}")]
+        [HttpPut("complete/{enrollmentId}")]
         public async Task<IActionResult> CompleteEnrollment([FromRoute] int enrollmentId)
         {
             var result = await enrollService.CompleteEnrollmentAsync(enrollmentId);

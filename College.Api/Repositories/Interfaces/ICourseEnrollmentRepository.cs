@@ -10,6 +10,8 @@ namespace College.Api.Repositories.Interfaces
 
         Task<CourseEnrollment> CreateAsync(CourseEnrollment enrollment);
 
+        Task<List<CourseEnrollment>> GetAllAsync();
+
         Task<CourseEnrollment?> DeleteAsync(CourseEnrollment enrollment);
 
         Task<CourseEnrollment?> UpdateAsync(CourseEnrollment enrollment);

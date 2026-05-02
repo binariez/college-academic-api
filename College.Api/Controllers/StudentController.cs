@@ -6,7 +6,7 @@ namespace College.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentController : ControllerBase
+    public class StudentController : BaseController
     {
         private readonly IStudentService studentService;
 
@@ -36,21 +36,26 @@ namespace College.Api.Controllers
         [HttpPost("{majorId}")]
         public async Task<IActionResult> CreateStudent([FromRoute] int majorId, StudentRequestDto requestDto)
         {
-            try
-            {
-                var createdStudent = await studentService.CreateAsync(majorId, requestDto);
+            // DTO validation
+            var errors = GetValidationErrors(requestDto);
 
-                return CreatedAtAction(nameof(GetStudentById), new { id = createdStudent.Id }, createdStudent);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            if (errors.Count != 0) return BadRequest(new { Errors = errors });
+
+            // Proceed to service
+            var createdStudent = await studentService.CreateAsync(majorId, requestDto);
+
+            return CreatedAtAction(nameof(GetStudentById), new { id = createdStudent.Id }, createdStudent);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent([FromRoute] int id, [FromBody] StudentRequestDto requestDto)
         {
+            // DTO validation
+            var errors = GetValidationErrors(requestDto);
+
+            if (errors.Count != 0) return BadRequest(new { Errors = errors });
+
+            // Proceed to service
             var result = await studentService.UpdateAsync(id, requestDto);
 
             if (result == null) return NotFound();

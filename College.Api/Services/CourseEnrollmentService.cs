@@ -3,7 +3,6 @@ using College.Api.Mappers;
 using College.Api.Repositories.Interfaces;
 using College.Api.Services.Interfaces;
 using College.Api.Shared.Enums;
-using System.Reflection.Metadata.Ecma335;
 
 namespace College.Api.Services
 {
@@ -126,6 +125,13 @@ namespace College.Api.Services
         public async Task<IEnumerable<CourseEnrollmentResponseDto>> GetByStudentIdAsync(int studentId)
         {
             var result = await enrollmentRepo.GetByStudentIdAsync(studentId);
+
+            return result.Select(r => r.ToResponseDto());
+        }
+
+        public async Task<IEnumerable<CourseEnrollmentResponseDto>> GetAllAsync()
+        {
+            var result = await enrollmentRepo.GetAllAsync();
 
             return result.Select(r => r.ToResponseDto());
         }

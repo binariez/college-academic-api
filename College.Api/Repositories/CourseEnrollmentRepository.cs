@@ -83,5 +83,15 @@ namespace College.Api.Repositories
 
             return await result.ToListAsync();
         }
+
+        public Task<List<CourseEnrollment>> GetAllAsync()
+        {
+            var result = context.CourseEnrollments
+                .Include(ce => ce.Student)
+                .Include(ce => ce.CourseClass)
+                .ThenInclude(cc => cc.Course);
+
+            return result.ToListAsync();
+        }
     }
 }
