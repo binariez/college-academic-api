@@ -1,7 +1,6 @@
 ﻿using College.Api.DTOs.Student;
 using College.Api.Exceptions;
 using College.Api.Mappers;
-using College.Api.Models;
 using College.Api.Repositories.Interfaces;
 using College.Api.Services.Interfaces;
 
@@ -35,14 +34,14 @@ namespace College.Api.Services
             return newObject.ToResponseDto();
         }
 
-        public async Task<StudentResponseDto?> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            if (await studentRepo.Exists(id) == false)
+            var result = await studentRepo.GetByIdAsync(id);
+
+            if (result == null)
                 throw new NotFoundException($"Student with id: {id} does not exist!");
 
-            var deletedObject = await studentRepo.DeleteAsync(id);
-
-            return deletedObject?.ToResponseDto();
+            await studentRepo.DeleteAsync(result);
         }
 
         public async Task<IEnumerable<StudentResponseDto>> GetAllAsync()
@@ -52,41 +51,40 @@ namespace College.Api.Services
             return result.Select(s => s.ToResponseDto());
         }
 
-        public async Task<StudentResponseDto?> GetByIdAsync(int id)
+        public async Task<StudentResponseDto> GetByIdAsync(int id)
         {
-            if (await studentRepo.Exists(id) == false)
-                throw new NotFoundException($"Student with id: {id} does not exist!");
-
             var result = await studentRepo.GetByIdAsync(id);
 
-            return result?.ToResponseDto();
+            if (result == null)
+                throw new NotFoundException($"Student with id: {id} does not exist!");
+
+            return result.ToResponseDto();
         }
 
-        public async Task<StudentResponseDto?> UpdateAsync(int id, StudentRequestDto requestDto)
+        public async Task<StudentResponseDto> UpdateAsync(int id, StudentRequestDto requestDto)
         {
-            if (await studentRepo.Exists(id) == false)
+            var student = await studentRepo.GetByIdAsync(id);
+
+            if (student == null)
                 throw new NotFoundException($"Student with id: {id} does not exist.");
 
             if (await majorRepo.Exists(requestDto.MajorId) == false)
                 throw new NotFoundException($"The choosen major with id: {requestDto.MajorId} does not exist.");
 
-            var updatedObject = new Student
-            {
-                Id = id,
-                FullName = requestDto.FullName,
-                DateOfBirth = requestDto.DateOfBirth,
-                Gender = requestDto.Gender,
-                Religion = requestDto.Religion,
-                Address = requestDto.Address,
-                PhoneNumber = requestDto.PhoneNumber,
-                EmergencyContactPhone = requestDto.EmergencyContactPhone,
-                Email = requestDto.Email,
-                MajorId = requestDto.MajorId
-            };
+            // Map changes
+            student.FullName = requestDto.FullName;
+            student.DateOfBirth = requestDto.DateOfBirth;
+            student.Gender = requestDto.Gender;
+            student.Religion = requestDto.Religion;
+            student.Address = requestDto.Address;
+            student.PhoneNumber = requestDto.PhoneNumber;
+            student.EmergencyContactPhone = requestDto.EmergencyContactPhone;
+            student.Email = requestDto.Email;
+            student.MajorId = requestDto.MajorId;
 
-            var result = await studentRepo.UpdateAsync(updatedObject);
+            await studentRepo.SaveChangesAsync();
 
-            return result?.ToResponseDto();
+            return student.ToResponseDto();
         }
 
         //-------------------------

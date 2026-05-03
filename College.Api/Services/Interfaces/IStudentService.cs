@@ -6,12 +6,12 @@ namespace College.Api.Services.Interfaces
     {
         Task<StudentResponseDto> CreateAsync(StudentRequestDto requestDto);
 
-        Task<StudentResponseDto?> DeleteAsync(int id);
+        Task DeleteAsync(int id);
 
         Task<IEnumerable<StudentResponseDto>> GetAllAsync();
 
-        Task<StudentResponseDto?> GetByIdAsync(int id);
+        Task<StudentResponseDto> GetByIdAsync(int id);
 
-        Task<StudentResponseDto?> UpdateAsync(int id, StudentRequestDto requestDto);
+        Task<StudentResponseDto> UpdateAsync(int id, StudentRequestDto requestDto);
     }
 }

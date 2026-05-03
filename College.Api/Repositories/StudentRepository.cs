@@ -5,6 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace College.Api.Repositories
 {
+    /// <summary>
+    /// After learning a bit deeper about repository pattern and then cleaning some code here,
+    /// I think this repo class kinda looks useless that I thought I could just call these oneliners straight from service.
+    /// But at the same time, I'm not even adding complex queries yet lol.
+    /// </summary>
     public class StudentRepository : IStudentRepository
     {
         private readonly AppDbContext context;
@@ -23,27 +28,23 @@ namespace College.Api.Repositories
         {
             await context.Students.AddAsync(studentModel);
 
-            await context.SaveChangesAsync();
+            await SaveChangesAsync();
 
             return studentModel;
         }
 
-        public async Task<Student?> DeleteAsync(int id)
+        public async Task DeleteAsync(Student student)
         {
-            var studentObject = context.Students.FirstOrDefault(s => s.Id == id);
+            context.Students.Remove(student);
 
-            if (studentObject == null) return null;
-
-            context.Students.Remove(studentObject);
-
-            await context.SaveChangesAsync();
-
-            return studentObject;
+            await SaveChangesAsync();
         }
 
-        public async Task<List<Student>> GetAllAsync()
+        public async Task<IEnumerable<Student>> GetAllAsync()
         {
-            return await context.Students.ToListAsync();
+            return await context.Students
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Student?> GetByIdAsync(int id)
@@ -51,17 +52,9 @@ namespace College.Api.Repositories
             return await context.Students.FindAsync(id);
         }
 
-        public async Task<Student?> UpdateAsync(Student student)
+        public async Task SaveChangesAsync()
         {
-            var studentFromDb = await context.Students.FirstOrDefaultAsync(s => s.Id == student.Id);
-
-            if (studentFromDb == null) return null;
-
-            context.Entry(studentFromDb).CurrentValues.SetValues(student);
-
             await context.SaveChangesAsync();
-
-            return studentFromDb;
         }
     }
 }

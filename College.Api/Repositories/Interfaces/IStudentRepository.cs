@@ -8,12 +8,12 @@ namespace College.Api.Repositories.Interfaces
 
         Task<Student> CreateAsync(Student student);
 
-        Task<Student?> DeleteAsync(int id);
+        Task DeleteAsync(Student student);
 
-        Task<List<Student>> GetAllAsync();
+        Task<IEnumerable<Student>> GetAllAsync();
 
         Task<Student?> GetByIdAsync(int id);
 
-        Task<Student?> UpdateAsync(Student student);
+        Task SaveChangesAsync();
     }
 }
