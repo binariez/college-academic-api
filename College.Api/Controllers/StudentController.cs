@@ -6,7 +6,7 @@ namespace College.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentController : BaseController
+    public class StudentController : ControllerBase
     {
         private readonly IStudentService studentService;
 
@@ -18,57 +18,33 @@ namespace College.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetStudentAll()
         {
-            var students = await studentService.GetAllAsync();
-
-            return Ok(students);
+            return Ok(await studentService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudentById([FromRoute] int id)
         {
-            var result = await studentService.GetByIdAsync(id);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await studentService.GetByIdAsync(id));
         }
 
-        [HttpPost("{majorId}")]
-        public async Task<IActionResult> CreateStudent([FromRoute] int majorId, StudentRequestDto requestDto)
+        [HttpPost]
+        public async Task<IActionResult> CreateStudent(StudentRequestDto requestDto)
         {
-            // DTO validation
-            var errors = GetValidationErrors(requestDto);
+            var result = await studentService.CreateAsync(requestDto);
 
-            if (errors.Count != 0) return BadRequest(new { Errors = errors });
-
-            // Proceed to service
-            var createdStudent = await studentService.CreateAsync(majorId, requestDto);
-
-            return CreatedAtAction(nameof(GetStudentById), new { id = createdStudent.Id }, createdStudent);
+            return CreatedAtAction(nameof(GetStudentById), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent([FromRoute] int id, [FromBody] StudentRequestDto requestDto)
         {
-            // DTO validation
-            var errors = GetValidationErrors(requestDto);
-
-            if (errors.Count != 0) return BadRequest(new { Errors = errors });
-
-            // Proceed to service
-            var result = await studentService.UpdateAsync(id, requestDto);
-
-            if (result == null) return NotFound();
-
-            return CreatedAtAction(nameof(GetStudentById), new { id = result.Id }, result);
+            return Ok(await studentService.UpdateAsync(id, requestDto));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var result = await studentService.DeleteAsync(id);
-
-            if (result == null) return NotFound();
+            await studentService.DeleteAsync(id);
 
             return NoContent();
         }

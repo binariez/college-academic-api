@@ -17,18 +17,18 @@ namespace College.Api.Services
             this.majorRepo = majorRepo;
             this.studentRepo = studentRepo;
         }
-       
+        
 
         //-------------------------
         // Begin of CRUD operations
         //-------------------------
 
-        public async Task<StudentResponseDto> CreateAsync(int majorId, StudentRequestDto requestDto)
+        public async Task<StudentResponseDto> CreateAsync(StudentRequestDto requestDto)
         {
-            if (await majorRepo.Exists(majorId) == false)
-                throw new NotFoundException($"The choosen major with id: {majorId} does not exist!");
+            if (await majorRepo.Exists(requestDto.MajorId) == false)
+                throw new NotFoundException($"The choosen major with id: {requestDto.MajorId} does not exist!");
 
-            var fromDto = requestDto.ToClassFromRequestDto(majorId);
+            var fromDto = requestDto.ToClassFromRequestDto(requestDto.MajorId);
 
             var newObject = await studentRepo.CreateAsync(fromDto);
 
@@ -37,6 +37,9 @@ namespace College.Api.Services
 
         public async Task<StudentResponseDto?> DeleteAsync(int id)
         {
+            if (await studentRepo.Exists(id) == false)
+                throw new NotFoundException($"Student with id: {id} does not exist!");
+
             var deletedObject = await studentRepo.DeleteAsync(id);
 
             return deletedObject?.ToResponseDto();
@@ -51,6 +54,9 @@ namespace College.Api.Services
 
         public async Task<StudentResponseDto?> GetByIdAsync(int id)
         {
+            if (await studentRepo.Exists(id) == false)
+                throw new NotFoundException($"Student with id: {id} does not exist!");
+
             var result = await studentRepo.GetByIdAsync(id);
 
             return result?.ToResponseDto();

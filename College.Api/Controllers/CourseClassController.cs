@@ -6,7 +6,7 @@ namespace College.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CourseClassController : BaseController
+    public class CourseClassController : ControllerBase
     {
         private ICourseClassService ccService;
 
@@ -36,12 +36,6 @@ namespace College.Api.Controllers
         [HttpPost("{courseId}")]
         public async Task<IActionResult> CreateCourseClass([FromRoute]int courseId, [FromBody] CourseClassRequestDto requestDto)
         {
-            // DTO validation
-            var errors = GetValidationErrors(requestDto);
-
-            if (errors.Count != 0) return BadRequest(new { Errors = errors });
-
-            // Proceed to service
             var result = await ccService.CreateAsync(courseId, requestDto);
 
             return CreatedAtAction(nameof(GetCourseClassById), new { id = result.Id }, result);
@@ -50,12 +44,6 @@ namespace College.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCourseClass([FromRoute] int id, [FromBody] CourseClassRequestDto requestDto)
         {
-            // DTO validation
-            var errors = GetValidationErrors(requestDto);
-
-            if (errors.Count != 0) return BadRequest(new { Errors = errors });
-
-            // Proceed to service
             var result = await ccService.UpdateAsync(id, requestDto);
 
             if (result == null) return NotFound();

@@ -4,7 +4,7 @@ namespace College.Api.Services.Interfaces
 {
     public interface IStudentService
     {
-        Task<StudentResponseDto> CreateAsync(int majorId, StudentRequestDto requestDto);
+        Task<StudentResponseDto> CreateAsync(StudentRequestDto requestDto);
 
         Task<StudentResponseDto?> DeleteAsync(int id);
 
