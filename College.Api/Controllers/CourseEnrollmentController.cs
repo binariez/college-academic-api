@@ -24,16 +24,9 @@ namespace College.Api.Controllers
             if (errors.Count != 0) return BadRequest(new { Errors = errors });
 
             // Proceed to service
-            try
-            {
-                var result = await enrollService.CreateAsync(requestDto);
+            var result = await enrollService.CreateAsync(requestDto);
 
-                return CreatedAtAction(nameof(GetEnrollmentById), new { id = result.Id }, result);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return CreatedAtAction(nameof(GetEnrollmentById), new { id = result.Id }, result);
         }
 
         [HttpGet]

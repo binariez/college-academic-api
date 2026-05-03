@@ -1,3 +1,4 @@
+using College.Api.Exceptions;
 using College.Api.Persistence;
 using College.Api.Repositories;
 using College.Api.Repositories.Interfaces;
@@ -24,6 +25,12 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen();
 
+// exception handler
+builder.Services.AddExceptionHandler<BadRequestExceptionHandler>();
+builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // repo
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
@@ -41,6 +48,8 @@ builder.Services.AddScoped<ICourseEnrollmentService, CourseEnrollmentService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseExceptionHandler();
+
 app.MapOpenApi();
 
 app.UseSwagger();

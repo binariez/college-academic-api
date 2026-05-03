@@ -42,16 +42,9 @@ namespace College.Api.Controllers
             if (errors.Count != 0) return BadRequest(new { Errors = errors });
 
             // Proceed to service
-            try
-            {
-                var result = await courseService.CreateAsync(majorId, requestDto);
+            var result = await courseService.CreateAsync(majorId, requestDto);
 
-                return CreatedAtAction(nameof(GetCourseById), new { id = result.Id }, result);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return CreatedAtAction(nameof(GetCourseById), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]

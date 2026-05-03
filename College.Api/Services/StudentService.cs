@@ -1,4 +1,5 @@
 ﻿using College.Api.DTOs.Student;
+using College.Api.Exceptions;
 using College.Api.Mappers;
 using College.Api.Models;
 using College.Api.Repositories.Interfaces;
@@ -25,7 +26,7 @@ namespace College.Api.Services
         public async Task<StudentResponseDto> CreateAsync(int majorId, StudentRequestDto requestDto)
         {
             if (await majorRepo.Exists(majorId) == false)
-                throw new Exception("The choosen Major does not exist!");
+                throw new NotFoundException($"The choosen major with id: {majorId} does not exist!");
 
             var fromDto = requestDto.ToClassFromRequestDto(majorId);
 
@@ -57,6 +58,12 @@ namespace College.Api.Services
 
         public async Task<StudentResponseDto?> UpdateAsync(int id, StudentRequestDto requestDto)
         {
+            if (await studentRepo.Exists(id) == false)
+                throw new NotFoundException($"Student with id: {id} does not exist.");
+
+            if (await majorRepo.Exists(requestDto.MajorId) == false)
+                throw new NotFoundException($"The choosen major with id: {requestDto.MajorId} does not exist.");
+
             var updatedObject = new Student
             {
                 Id = id,
