@@ -18,19 +18,13 @@ namespace College.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCourseClassAll()
         {
-            var result = await ccService.GetAllAsync();
-
-            return Ok(result);
+            return Ok(await ccService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCourseClassById([FromRoute] int id)
         {
-            var result = await ccService.GetByIdAsync(id);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await ccService.GetByIdAsync(id));
         }
 
         [HttpPost("{courseId}")]
@@ -44,19 +38,13 @@ namespace College.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCourseClass([FromRoute] int id, [FromBody] CourseClassRequestDto requestDto)
         {
-            var result = await ccService.UpdateAsync(id, requestDto);
-
-            if (result == null) return NotFound();
-
-            return CreatedAtAction(nameof(GetCourseClassById), new { id = result.Id }, result);
+            return Ok(await ccService.UpdateAsync(id, requestDto));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourseClass([FromRoute] int id)
         {
-            var result = await ccService.DeleteAsync(id);
-
-            if (result == null) return NotFound();
+            await ccService.DeleteAsync(id);
 
             return NoContent();
         }

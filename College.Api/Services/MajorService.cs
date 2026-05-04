@@ -1,4 +1,6 @@
 ﻿using College.Api.DTOs.Major;
+using College.Api.DTOs.Student;
+using College.Api.Exceptions;
 using College.Api.Mappers;
 using College.Api.Models;
 using College.Api.Repositories.Interfaces;
@@ -22,46 +24,59 @@ namespace College.Api.Services
 
         public async Task<MajorResponseDto> CreateAsync(MajorRequestDto requestDto)
         {
-            var fromDto = requestDto.ToMajorFromMajorDto();
+            var fromDto = requestDto.ToClassFromMajorDto();
 
-            var newObject = await majorRepo.CreateAsync(fromDto);
+            var created = await majorRepo.CreateAsync(fromDto);
 
-            return newObject.ToMajorDto();
+            return created.ToResponseDto();
         }
 
-        public async Task<MajorResponseDto?> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            var deletedObject = await majorRepo.DeleteAsync(id);
+            var result = await majorRepo.GetByIdAsync(id);
 
-            return deletedObject?.ToMajorDto();
+            if (result == null)
+                throw new NotFoundException($"Major with id: {id} does not exist!");
+
+            await majorRepo.DeleteAsync(result);
         }
 
         public async Task<IEnumerable<MajorResponseDto>> GetAllAsync()
         {
             var result = await majorRepo.GetAllAsync();
 
-            return result.Select(m => m.ToMajorDto());
+            return result.Select(m => m.ToResponseDto());
         }
 
         public async Task<MajorResponseWithStudentDto?> GetByIdAsync(int id)
         {
             var result = await majorRepo.GetByIdAsync(id);
 
-            return result?.ToMajorDetailDto();
+            if (result == null)
+                throw new NotFoundException($"Major with id: {id} does not exist!");
+
+            return new MajorResponseWithStudentDto
+            (
+                result.Id,
+                result.Code,
+                result.Name,
+                result.Students.Select(s => new StudentSimpleDto(s.Id, s.FullName)).ToList()
+            );
         }
 
         public async Task<MajorResponseDto?> UpdateAsync(int id, MajorRequestDto requestDto)
         {
-            var updatedObject = new Major
-            {
-                Id = id,
-                Code = requestDto.Code,
-                Name = requestDto.Name,
-            };
+            var updated = await majorRepo.GetByIdAsync(id);
 
-            var result = await majorRepo.UpdateAsync(updatedObject);
+            if (updated == null)
+                throw new NotFoundException($"Major with id: {id} does not exist!");
 
-            return result?.ToMajorDto();
+            updated.Code = requestDto.Code;
+            updated.Name = requestDto.Name;
+
+            await majorRepo.SaveChangesAsync();
+
+            return updated.ToResponseDto();
         }
 
         //-------------------------

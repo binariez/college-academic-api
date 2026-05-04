@@ -1,8 +1,10 @@
 ﻿using College.Api.DTOs.CourseClass;
+using College.Api.Exceptions;
 using College.Api.Mappers;
 using College.Api.Models;
 using College.Api.Repositories.Interfaces;
 using College.Api.Services.Interfaces;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace College.Api.Services
 {
@@ -26,7 +28,7 @@ namespace College.Api.Services
         public async Task<CourseClassResponseDto> CreateAsync(int courseId, CourseClassRequestDto requestDto)
         {
             if (await courseRepo.Exists(courseId) == false)
-                throw new Exception("The choosen course does not exist!");
+                throw new NotFoundException("The choosen course does not exist!");
 
             var fromDto = requestDto.ToClassFromRequestDto(courseId);
 
@@ -35,11 +37,14 @@ namespace College.Api.Services
             return newObject.ToResponseDto();
         }
 
-        public async Task<CourseClassResponseDto?> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            var deletedObject = await ccRepo.DeleteAsync(id);
+            var deleted = await ccRepo.GetByIdAsync(id);
 
-            return deletedObject?.ToResponseDto();
+            if (deleted == null)
+                throw new NotFoundException($"Enrollment with id: {id} does not exist!");
+
+            await ccRepo.DeleteAsync(deleted);
         }
 
         public async Task<IEnumerable<CourseClassResponseDto>> GetAllAsync()
@@ -58,18 +63,22 @@ namespace College.Api.Services
 
         public async Task<CourseClassResponseDto?> UpdateAsync(int id, CourseClassRequestDto requestDto)
         {
-            var updatedObject = new CourseClass
-            {
-                Id = id,
-                CourseId = requestDto.CourseId,
-                AcademicYear = requestDto.AcademicYear,
-                Name = requestDto.Name,
-                SemesterType = requestDto.SemesterType
-            };
+            var updated = await ccRepo.GetByIdAsync(id);
 
-            var result = await ccRepo.UpdateAsync(updatedObject);
+            if (updated == null)
+                throw new NotFoundException($"Enrollment with id: {id} does not exist!");
 
-            return result?.ToResponseDto();
+            if (await courseRepo.Exists(requestDto.CourseId) == false)
+                throw new NotFoundException("The choosen course does not exist!");
+
+            updated.CourseId = requestDto.CourseId;
+            updated.AcademicYear = requestDto.AcademicYear;
+            updated.Name = requestDto.Name;
+            updated.SemesterType = requestDto.SemesterType;
+
+            await ccRepo.SaveChangesAsync();
+
+            return updated.ToResponseDto();
         }
 
         //-------------------------

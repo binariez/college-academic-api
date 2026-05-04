@@ -18,19 +18,13 @@ namespace College.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetMajorAll()
         {
-            var result = await majorService.GetAllAsync();
-
-            return Ok(result);
+            return Ok(await majorService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMajorById([FromRoute] int id)
         {
-            var result = await majorService.GetByIdAsync(id);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await majorService.GetByIdAsync(id));
         }
 
         [HttpPost]
@@ -42,21 +36,15 @@ namespace College.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMajor([FromRoute] int id, MajorRequestDto majorDTO)
+        public async Task<IActionResult> UpdateMajor([FromRoute] int id, MajorRequestDto requestDto)
         {
-            var result = await majorService.UpdateAsync(id, majorDTO);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await majorService.UpdateAsync(id, requestDto));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMajor([FromRoute] int id)
         {
-            var result = await majorService.DeleteAsync(id);
-
-            if (result == null) return NotFound();
+            await majorService.DeleteAsync(id);
 
             return NoContent();
         }

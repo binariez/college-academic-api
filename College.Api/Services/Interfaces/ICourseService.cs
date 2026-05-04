@@ -6,7 +6,7 @@ namespace College.Api.Services.Interfaces
     {
         Task<CourseResponseDto> CreateAsync(int majorId, CourseRequestDto requestDto);
 
-        Task<CourseResponseDto?> DeleteAsync(int id);
+        Task DeleteAsync(int id);
 
         Task<IEnumerable<CourseResponseDto>> GetAllAsync();
 

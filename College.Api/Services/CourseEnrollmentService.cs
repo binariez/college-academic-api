@@ -1,4 +1,5 @@
 ﻿using College.Api.DTOs.CourseEnrollment;
+using College.Api.Exceptions;
 using College.Api.Mappers;
 using College.Api.Repositories.Interfaces;
 using College.Api.Services.Interfaces;
@@ -34,14 +35,14 @@ namespace College.Api.Services
         public async Task<CourseEnrollmentResponseDto> CreateAsync(CourseEnrollmentRequestDto requestDto)
         {
             if (await studentRepo.Exists(requestDto.StudentId) == false)
-                throw new Exception("Student does not exist!");
+                throw new NotFoundException("Student does not exist!");
 
             if (await courseClassRepo.Exists(requestDto.CourseClassId) == false) 
-                throw new Exception("Course class does not exist!");
+                throw new NotFoundException("Course class does not exist!");
 
             var alreadyEnrolled = await enrollmentRepo.AlreadyEnrolled(requestDto.StudentId, requestDto.CourseClassId);
 
-            if (alreadyEnrolled != null) throw new Exception("This student already enrolled for this class!");
+            if (alreadyEnrolled != null) throw new BadRequestException("This student already enrolled for this class!");
 
             // TODO: check course prerequisite first before a student able to enroll the particular course class
 
@@ -53,15 +54,14 @@ namespace College.Api.Services
         }
 
         // Hard delete (intended for admin usage)
-        public async Task<CourseEnrollmentResponseDto?> DeleteAsync(int courseEnrollmentId)
+        public async Task DeleteAsync(int courseEnrollmentId)
         {
-            var deletedObject = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
+            var deleted = await enrollmentRepo.GetByIdAsync(courseEnrollmentId);
 
-            if (deletedObject == null) return null;
+            if (deleted == null)
+                throw new NotFoundException($"Enrollment with id: {courseEnrollmentId} does not exist!");
 
-            await enrollmentRepo.DeleteAsync(deletedObject);
-
-            return deletedObject.ToResponseDto();
+            await enrollmentRepo.DeleteAsync(deleted);
         }
 
         // Soft delete (intended for student usage)
@@ -72,11 +72,11 @@ namespace College.Api.Services
             if (existing == null) return null;
 
             if (existing.EnrollmentStatus == EnrollmentStatus.Completed)
-                throw new Exception("Cannot drop because this enrollment has already been completed!");
+                throw new BadRequestException("Cannot drop because this enrollment has already been completed!");
 
             existing.EnrollmentStatus = EnrollmentStatus.Dropped;
 
-            await enrollmentRepo.UpdateAsync(existing);
+            await enrollmentRepo.SaveChangesAsync();
 
             return existing.ToResponseDto();
         }
@@ -89,11 +89,11 @@ namespace College.Api.Services
             if (existing == null) return null;
 
             if (existing.EnrollmentStatus == EnrollmentStatus.Dropped)
-                throw new Exception("Cannot complete an enrollment that has been dropped. Please the status to enrolled first!");
+                throw new BadRequestException("Cannot complete an enrollment that has been dropped. Please the status to enrolled first!");
 
             existing.EnrollmentStatus = EnrollmentStatus.Completed;
 
-            await enrollmentRepo.UpdateAsync(existing);
+            await enrollmentRepo.SaveChangesAsync();
 
             return existing.ToResponseDto();
         }
@@ -107,12 +107,12 @@ namespace College.Api.Services
             if (existing == null) return null;
 
             if (existing.EnrollmentStatus == EnrollmentStatus.Completed)
-                throw new Exception("Cannot re-enroll. Enrollment has already been completed!");
+                throw new BadRequestException("Cannot re-enroll. Enrollment has already been completed!");
 
             existing.EnrollmentStatus = EnrollmentStatus.Enrolled;
             existing.EnrolledAt = DateTime.Now;
 
-            await enrollmentRepo.UpdateAsync(existing);
+            await enrollmentRepo.SaveChangesAsync();
 
             return existing.ToResponseDto();
         }

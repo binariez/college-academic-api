@@ -28,42 +28,28 @@ namespace College.Api.Repositories
             return course;
         }
 
-        public async Task<Course?> DeleteAsync(int id)
+        public async Task DeleteAsync(Course course)
         {
-            var courseObject = await context.Courses.FindAsync(id);
+            context.Courses.Remove(course);
 
-            if (courseObject == null) return null;
-
-            context.Courses.Remove(courseObject);
-
-            return courseObject;
+            await SaveChangesAsync();
         }
 
-        public Task<List<Course>> GetAllAsync()
+        public async Task<IEnumerable<Course>> GetAllAsync()
         {
-            return context.Courses.ToListAsync();
+            return await context.Courses
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Course?> GetByIdAsync(int id)
         {
-            var courseObject = await context.Courses.FindAsync(id);
-
-            if (courseObject == null) return null;
-
-            return courseObject;
+            return await context.Courses.FindAsync(id);
         }
 
-        public async Task<Course?> UpdateAsync(Course course)
+        public async Task SaveChangesAsync()
         {
-            var courseFromDb = await context.Courses.FindAsync(course.Id);
-
-            if (courseFromDb == null) return null;
-
-            context.Entry(courseFromDb).CurrentValues.SetValues(course);
-
             await context.SaveChangesAsync();
-
-            return courseFromDb;
         }
     }
 }

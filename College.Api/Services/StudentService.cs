@@ -29,9 +29,9 @@ namespace College.Api.Services
 
             var fromDto = requestDto.ToClassFromRequestDto(requestDto.MajorId);
 
-            var newObject = await studentRepo.CreateAsync(fromDto);
+            var created = await studentRepo.CreateAsync(fromDto);
 
-            return newObject.ToResponseDto();
+            return created.ToResponseDto();
         }
 
         public async Task DeleteAsync(int id)
@@ -63,28 +63,28 @@ namespace College.Api.Services
 
         public async Task<StudentResponseDto> UpdateAsync(int id, StudentRequestDto requestDto)
         {
-            var student = await studentRepo.GetByIdAsync(id);
+            var updated = await studentRepo.GetByIdAsync(id);
 
-            if (student == null)
+            if (updated == null)
                 throw new NotFoundException($"Student with id: {id} does not exist.");
 
             if (await majorRepo.Exists(requestDto.MajorId) == false)
                 throw new NotFoundException($"The choosen major with id: {requestDto.MajorId} does not exist.");
 
             // Map changes
-            student.FullName = requestDto.FullName;
-            student.DateOfBirth = requestDto.DateOfBirth;
-            student.Gender = requestDto.Gender;
-            student.Religion = requestDto.Religion;
-            student.Address = requestDto.Address;
-            student.PhoneNumber = requestDto.PhoneNumber;
-            student.EmergencyContactPhone = requestDto.EmergencyContactPhone;
-            student.Email = requestDto.Email;
-            student.MajorId = requestDto.MajorId;
+            updated.FullName = requestDto.FullName;
+            updated.DateOfBirth = requestDto.DateOfBirth;
+            updated.Gender = requestDto.Gender;
+            updated.Religion = requestDto.Religion;
+            updated.Address = requestDto.Address;
+            updated.PhoneNumber = requestDto.PhoneNumber;
+            updated.EmergencyContactPhone = requestDto.EmergencyContactPhone;
+            updated.Email = requestDto.Email;
+            updated.MajorId = requestDto.MajorId;
 
             await studentRepo.SaveChangesAsync();
 
-            return student.ToResponseDto();
+            return updated.ToResponseDto();
         }
 
         //-------------------------

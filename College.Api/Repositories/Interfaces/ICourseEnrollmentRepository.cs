@@ -10,14 +10,14 @@ namespace College.Api.Repositories.Interfaces
 
         Task<CourseEnrollment> CreateAsync(CourseEnrollment enrollment);
 
-        Task<List<CourseEnrollment>> GetAllAsync();
+        Task<IEnumerable<CourseEnrollment>> GetAllAsync();
 
-        Task<CourseEnrollment?> DeleteAsync(CourseEnrollment enrollment);
-
-        Task<CourseEnrollment?> UpdateAsync(CourseEnrollment enrollment);
+        Task DeleteAsync(CourseEnrollment enrollment);
 
         Task<CourseEnrollment?> GetByIdAsync(int id);
 
-        Task<List<CourseEnrollment>> GetByStudentIdAsync(int studentId);
+        Task<IEnumerable<CourseEnrollment>> GetByStudentIdAsync(int studentId);
+
+        Task SaveChangesAsync();
     }
 }

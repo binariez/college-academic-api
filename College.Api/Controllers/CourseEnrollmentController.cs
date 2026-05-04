@@ -26,38 +26,26 @@ namespace College.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEnrollmentAll()
         {
-            var result = await enrollService.GetAllAsync();
-
-            return Ok(result);
+            return Ok(await enrollService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEnrollmentById([FromRoute] int id)
         {
-            var result = await enrollService.GetByIdAsync(id);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await enrollService.GetByIdAsync(id));
         }
 
         [HttpGet("student/{studentId}")]
         public async Task<IActionResult> GetEnrollmentByStudentId([FromRoute] int studentId)
         {
-            var result = await enrollService.GetByStudentIdAsync(studentId);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await enrollService.GetByStudentIdAsync(studentId));
         }
 
         // Hard delete by admin
         [HttpDelete("{enrollmentId}")]
         public async Task<IActionResult> DeleteEnrollment([FromRoute] int enrollmentId)
         {
-            var result = await enrollService.DeleteAsync(enrollmentId);
-
-            if (result == null) return NotFound();
+            await enrollService.DeleteAsync(enrollmentId);
 
             return NoContent();
         }
@@ -66,33 +54,21 @@ namespace College.Api.Controllers
         [HttpPut("student/drop/{enrollmentId}")]
         public async Task<IActionResult> DropEnrollment([FromRoute] int enrollmentId)
         {
-            var result = await enrollService.DropEnrollmentAsync(enrollmentId);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await enrollService.DropEnrollmentAsync(enrollmentId));
         }
 
         // Ideally, this should be automatic. But for now I'm just putting it here
         [HttpPut("complete/{enrollmentId}")]
         public async Task<IActionResult> CompleteEnrollment([FromRoute] int enrollmentId)
         {
-            var result = await enrollService.CompleteEnrollmentAsync(enrollmentId);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await enrollService.CompleteEnrollmentAsync(enrollmentId));
         }
 
         // For more information, ctrl + click the service method
         [HttpPut("student/reenroll/{enrollmentId}")]
         public async Task<IActionResult> ReEnroll([FromRoute] int enrollmentId)
         {
-            var result = await enrollService.ReEnrollAsync(enrollmentId);
-
-            if (result == null) return NotFound();
-
-            return Ok(result);
+            return Ok(await enrollService.ReEnrollAsync(enrollmentId));
         }
     }
 }

@@ -23,49 +23,33 @@ namespace College.Api.Repositories
         {
             await context.CourseClasses.AddAsync(courseClass);
 
-            await context.SaveChangesAsync();
+            await SaveChangesAsync();
 
             return courseClass;
         }
 
-        public async Task<CourseClass?> DeleteAsync(int id)
+        public async Task DeleteAsync(CourseClass courseClass)
         {
-            var courseClassObject = await context.CourseClasses.FindAsync(id);
-
-            if (courseClassObject == null) return null;
-
-            context.CourseClasses.Remove(courseClassObject);
+            context.CourseClasses.Remove(courseClass);
 
             await context.SaveChangesAsync();
-
-            return courseClassObject;
         }
 
-        public Task<List<CourseClass>> GetAllAsync()
+        public async Task<IEnumerable<CourseClass>> GetAllAsync()
         {
-            return context.CourseClasses.ToListAsync();
+            return await context.CourseClasses
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<CourseClass?> GetByIdAsync(int id)
         {
-            var courseClassObject = await context.CourseClasses.FindAsync(id);
-
-            if (courseClassObject == null) return null;
-
-            return courseClassObject;
+            return await context.CourseClasses.FindAsync(id);
         }
 
-        public async Task<CourseClass?> UpdateAsync(CourseClass courseClass)
+        public async Task SaveChangesAsync()
         {
-            var courseClassFromDb = await context.CourseClasses.FindAsync(courseClass.Id);
-
-            if (courseClassFromDb == null) return null;
-
-            context.Entry(courseClassFromDb).CurrentValues.SetValues(courseClass);
-
-            await context.SaveChangesAsync();
-
-            return courseClassFromDb;
+            await SaveChangesAsync();
         }
     }
 }

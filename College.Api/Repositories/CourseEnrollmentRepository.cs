@@ -31,35 +31,16 @@ namespace College.Api.Repositories
         {
             await context.CourseEnrollments.AddAsync(enrollment);
 
-            await context.SaveChangesAsync();
+            await SaveChangesAsync();
 
             return enrollment;
         }
 
-        public async Task<CourseEnrollment?> DeleteAsync(CourseEnrollment enrollment)
+        public async Task DeleteAsync(CourseEnrollment enrollment)
         {
-            var fromDb = await context.CourseEnrollments.FindAsync(enrollment.Id);
-
-            if (fromDb == null) return null;
-
             context.CourseEnrollments.Remove(enrollment);
 
-            await context.SaveChangesAsync();
-
-            return fromDb;
-        }
-
-        public async Task<CourseEnrollment?> UpdateAsync(CourseEnrollment enrollment)
-        {
-            var fromDb = await context.CourseEnrollments.FindAsync(enrollment.Id);
-
-            if (fromDb == null) return null;
-
-            context.Entry(fromDb).CurrentValues.SetValues(enrollment);
-
-            await context.SaveChangesAsync();
-
-            return enrollment;
+            await SaveChangesAsync();
         }
 
         public async Task<CourseEnrollment?> GetByIdAsync(int id)
@@ -73,9 +54,10 @@ namespace College.Api.Repositories
             return await result.FirstOrDefaultAsync();
         }
 
-        public async Task<List<CourseEnrollment>> GetByStudentIdAsync(int studentId)
+        public async Task<IEnumerable<CourseEnrollment>> GetByStudentIdAsync(int studentId)
         {
             var result = context.CourseEnrollments
+                .AsNoTracking()
                 .Where(ce => ce.StudentId == studentId)
                 .Include(ce => ce.Student)
                 .Include(ce => ce.CourseClass)
@@ -84,14 +66,20 @@ namespace College.Api.Repositories
             return await result.ToListAsync();
         }
 
-        public Task<List<CourseEnrollment>> GetAllAsync()
+        public async Task<IEnumerable<CourseEnrollment>> GetAllAsync()
         {
             var result = context.CourseEnrollments
+                .AsNoTracking()
                 .Include(ce => ce.Student)
                 .Include(ce => ce.CourseClass)
                 .ThenInclude(cc => cc.Course);
 
-            return result.ToListAsync();
+            return await result.ToListAsync();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -8,12 +8,12 @@ namespace College.Api.Repositories.Interfaces
 
         Task<Major> CreateAsync(Major major);
 
-        Task<Major?> DeleteAsync(int id);
+        Task DeleteAsync(Major major);
 
-        Task<List<Major>> GetAllAsync();
+        Task<IEnumerable<Major>> GetAllAsync();
 
         Task<Major?> GetByIdAsync(int id);
 
-        Task<Major?> UpdateAsync(Major major);
+        Task SaveChangesAsync();
     }
 }

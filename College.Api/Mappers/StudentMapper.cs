@@ -32,14 +32,14 @@ namespace College.Api.Mappers
         /// But we don't want to show full blown Student data that will make the response cluttered.
         /// Only retreive necessary data like student id and their full name.
         /// </summary>
-        public static StudentSimpleDto ToSimpleStudentDto(this Student student)
-        {
-            return new StudentSimpleDto
-            (
-                student.Id,
-                student.FullName
-            );
-        }
+        //public static StudentSimpleDto ToSimpleStudentDto(this Student student)
+        //{
+        //    return new StudentSimpleDto
+        //    (
+        //        student.Id,
+        //        student.FullName
+        //    );
+        //}
 
         public static Student ToClassFromRequestDto(this StudentRequestDto requestDto, int majorId)
         {

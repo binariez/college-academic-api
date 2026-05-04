@@ -8,12 +8,12 @@ namespace College.Api.Repositories.Interfaces
 
         Task<Course> CreateAsync(Course course);
 
-        Task<Course?> DeleteAsync(int id);
+        Task DeleteAsync(Course course);
 
-        Task<List<Course>> GetAllAsync();
+        Task<IEnumerable<Course>> GetAllAsync();
 
         Task<Course?> GetByIdAsync(int id);
 
-        Task<Course?> UpdateAsync(Course course);
+        Task SaveChangesAsync();
     }
 }

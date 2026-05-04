@@ -14,7 +14,7 @@ public class Student //: BaseEntity
     public string PhoneNumber { get; set; } = string.Empty;
     public string EmergencyContactPhone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public DateOnly EnrollmentDate { get; set; }
+    public DateOnly EnrollmentDate { get; init; } = DateOnly.FromDateTime(DateTime.Now);
     public StudentStatus Status { get; set; }
     public int CurrentSemester { get; set; }
     [Column(TypeName = "decimal(3,2)")]

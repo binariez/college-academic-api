@@ -23,46 +23,38 @@ namespace College.Api.Repositories
         {
             await context.Majors.AddAsync(major);
 
-            await context.SaveChangesAsync();
+            await SaveChangesAsync();
 
             return major;
         }
 
-        public async Task<Major?> DeleteAsync(int id)
+        public async Task DeleteAsync(Major major)
         {
-            var majorObject = await context.Majors.FindAsync(id);
+            context.Majors.Remove(major);
 
-            if (majorObject == null) return null;
-
-            context.Majors.Remove(majorObject);
-
-            await context.SaveChangesAsync();
-
-            return majorObject;
+            await SaveChangesAsync();
         }
 
-        public async Task<List<Major>> GetAllAsync()
+        public async Task<IEnumerable<Major>> GetAllAsync()
         {
-            return await context.Majors.ToListAsync();
+            return await context.Majors
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<Major?> GetByIdAsync(int id)
         {
-            var res = await context.Majors.Include(m => m.Students).FirstOrDefaultAsync(m => m.Id == id);
+            var res = await context.Majors
+                //.AsNoTracking() <- disabled this because still need to be tracked for update in service
+                .Include(m => m.Students)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             return res;
         }
 
-        public async Task<Major?> UpdateAsync(Major major)
+        public async Task SaveChangesAsync()
         {
-            var majorFromDb = await context.Majors.FindAsync(major.Id);
-
-            if (majorFromDb == null) return null;
-
-            context.Entry(majorFromDb).CurrentValues.SetValues(major);
-
             await context.SaveChangesAsync();
-
-            return majorFromDb;
         }
     }
 }
